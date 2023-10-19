@@ -1,8 +1,18 @@
-//
-//  AppDelegate.swift
-//  Biddle
-//
-//  Created by Joshua Cheng on 10/16/23.
-//
+import UIKit
+import Firebase
 
-import Foundation
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    var window: UIWindow?
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Firebase Configuration
+        FirebaseApp.configure()
+        
+        return true
+    }
+
+    // Add any other application lifecycle methods if required
+}
+

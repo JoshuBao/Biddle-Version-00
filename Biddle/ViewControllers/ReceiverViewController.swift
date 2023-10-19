@@ -1,19 +1,33 @@
 import UIKit
+import FirebaseFirestore
 
 class ReceiverViewController: UIViewController {
 
     var user: User!
+    var listener: ListenerRegistration?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         user.role = .receiver
         FirebaseManager.shared.setRole(for: user)
         listenForColorChanges()
     }
 
     func listenForColorChanges() {
-        FirebaseManager.shared.listenForColorChanges { [weak self] color in
-            self?.view.backgroundColor = color == .yellow ? .yellow : .blue
+        listener = FirebaseManager.shared.listenForColorChanges { [weak self] color in
+            guard let strongSelf = self else { return }
+            
+            switch color {
+            case .yellow:
+                strongSelf.view.backgroundColor = .yellow
+            case .blue:
+                strongSelf.view.backgroundColor = .blue
+            }
         }
+    }
+
+    deinit {
+        listener?.remove() // Cleanup listener when the view is deinitialized
     }
 }

@@ -18,9 +18,22 @@ class FirebaseManager {
         ])
     }
 
-    func listenForColorChanges(completion: @escaping (UserColor) -> Void) {
-        db.collection("users").whereField("role", isEqualTo: UserRole.broadcaster).addSnapshotListener { (snapshot, error) in
-            // Handle snapshot and call completion with the new color
+    func listenForColorChanges(completion: @escaping (UserColor) -> Void) -> ListenerRegistration {
+        return db.collection("users").whereField("role", isEqualTo: UserRole.broadcaster).addSnapshotListener { (snapshot, error) in
+            
+            guard let documents = snapshot?.documents, let firstDoc = documents.first else {
+                print("No broadcaster found or error occurred.")
+                return
+            }
+            
+            let data = firstDoc.data()
+            if let currentColor = data["currentColor"] as? UserColor {
+                completion(currentColor)
+            }
         }
     }
+
+
+
+    
 }
